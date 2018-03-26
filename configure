@@ -1,0 +1,35 @@
+#!/bin/sh
+
+prefix=/opt/
+destdir=
+binary=euronextEOD
+
+for arg in "$@"; do
+    case "$arg" in
+    --prefix=*)
+        prefix=`echo $arg | sed 's/--prefix=//'`
+        ;;
+    
+    --destdir=*)
+        destdir=`echo $arg | sed 's/--destdir=//'`
+        ;;
+
+    --help)
+        echo 'usage: ./configure [options]'
+        echo 'options:'
+        echo '  --prefix=<path>: installation prefix'
+        echo '  --destdir=<path>: inspect installation folder'
+        echo '  --binName=<name>: binary name (default euronextEOD)'
+        exit 0
+        ;;
+    esac
+done
+
+echo 'generating makefile ...'
+echo "PREFIX = $prefix" > Makefile
+echo "DESTDIR = $destdir" >> Makefile
+echo " " >> Makefile
+echo "BIN = $binary" >> Makefile
+echo " " >> Makefile
+cat Makefile.in >> Makefile
+echo 'configuration complete, type make to build.'

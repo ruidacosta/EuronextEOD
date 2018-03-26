@@ -1,12 +1,15 @@
-*.class
+# Configuration file
+config.ini
 
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
+# generated objects
+*.o
+euronextEOD
+Makefile
 
-# Package Files #
-*.jar
-*.war
-*.ear
+# folders
+logs
+output
+bin
 
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
-hs_err_pid*
+# databases
+*.db

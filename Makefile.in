@@ -1,0 +1,40 @@
+CXX=g++
+RM=rm -f
+RM_DIR=rm -r
+CXXFLAGS=-Wall -Wshadow -Wextra -pedantic -std=c++11 -pthread -lpthread -lsqlite3
+
+SRCS=$(wildcard *.cpp)
+OBJS=$(patsubst %.cpp, %.o, $(SRCS))
+
+BIN_FOLDER=./bin/
+CONFIG=config.ini
+
+all: $(OBJS)
+	$(CXX) -o $(BIN) $(OBJS) $(CXXFLAGS)
+
+release: all
+	mkdir -p $(BIN_FOLDER)
+	cp $(BIN) $(BIN_FOLDER)$(BIN)
+	cp FileDownloader.py $(BIN_FOLDER)FileDownloader
+	chmod a+x $(BIN_FOLDER)FileDownloader
+	cp starter.sh $(BIN_FOLDER)starter
+	chmod a+x $(BIN_FOLDER)starter
+	cp config_example.ini $(BIN_FOLDER)config.ini
+	
+install: all
+	mkdir -p $(PREFIX)$(BIN)
+	cp $(BIN) $(PREFIX)$(BIN)
+	cp FileDownloader.py $(PREFIX)$(BIN)/FileDownloader
+	chmod a+x $(PREFIX)$(BIN)/FileDownloader
+	cp starter.sh $(PREFIX)$(BIN)/starter
+	chmod a+x $(PREFIX)$(BIN)/starter
+	cp config_example.ini $(PREFIX)$(BIN)/config.ini
+	
+clean_release: 
+	$(RM_DIR) $(BIN_FOLDER)
+	
+clean:
+	$(RM) $(OBJS)
+	
+clean_all: clean_release clean
+	$(RM) $(BIN)
