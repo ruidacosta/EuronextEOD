@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 import argparse
 import os
 import traceback
@@ -83,7 +85,7 @@ def parseArgs():
     parser.add_argument('-c', '--config_file', action='store', dest='config_file', type=checkFile, required=True) #required
     args = parser.parse_args()
     return vars(args)
-    
+                                                                                                                                                                                                                    
 def readConfig(precedence):
     config = ConfigParser.RawConfigParser()
     config.read(precedence['config_file'])
@@ -114,7 +116,7 @@ def setLogger(log_folder,log_name=None, options=None):
         log_name = os.path.basename(__file__)
         logger = logging.getLogger('main')
     
-    try:
+    try:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
         log_name = log_name[:log_name.rindex('.')]
     except ValueError:
         pass
@@ -145,14 +147,26 @@ def setLogger(log_folder,log_name=None, options=None):
     email.setLevel(logging.ERROR)
     logger.addHandler(email)
 
-def GetFile(url,payload):
+def GetFile(url,payload):                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
     logger = logging.getLogger('main')
-    r = requests.post(url,data=payload)
-    filename = r.headers['content-disposition'].split('=')[1]
-    logger.info('Saving %s' % filename)
-    with open(filename, 'wb') as fd:
-        for chunk in r.iter_content(chunk_size=128):
-            fd.write(chunk)
+    flag = False
+    counter = 0
+    while not flag:
+        try:
+            counter += 1
+            r = requests.post(url,data=payload)
+            filename = r.headers['content-disposition'].split('=')[1]
+            logger.info('Saving %s' % filename)
+            with open(filename, 'wb') as fd:
+                for chunk in r.iter_content(chunk_size=128):
+                    fd.write(chunk)
+            flag = True
+        except:
+            if counter == 3:
+                raise
+            else:
+                logger.info("Retrying...(%d)" % counter)
+                time.sleep(5)
     return filename
     
 def moveFileTo(file, outputFolder):
