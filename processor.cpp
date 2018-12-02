@@ -6,6 +6,7 @@
 #include <cstdio>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <experimental/filesystem>
 
 #include "spdlog/spdlog.h"
 #include "csvUtils.hpp"
@@ -66,27 +67,37 @@ bool Processor::start(void)
 std::vector<std::string> Processor::getFilesFromDir(std::string path)
 {
     std::vector<std::string> result;
-    std::regex regExCsv("[a-zA-Z_0-9]+\\.csv");
-    std::smatch match;
+
     if (path.back() != '/')
         path += "/";
+
+    std::regex regExCsv("[a-zA-Z_0-9]+\\.csv");
+    std::string ext(".csv");
+    for (auto &p : std::experimental::filesystem::recursive_directory_iterator(path))
+    {
+        if (p.path().extension() == ext)
+            result.push_back(p.path());        
+    }
+    
+    // std::smatch match;
+    
     // try catch on regex using regex alternative
-    if (auto dir = opendir(path.c_str()))
-    {
-        while (auto f = readdir(dir))
-        {
-            if ((!f->d_name) ||
-                (f->d_name[0] == '.') ||
-                (!std::regex_search(std::string(f->d_name),match,regExCsv)))
-                continue;
-            result.push_back(path + f->d_name);
-        }
-    }
-    else
-    {
-        // cannot open directory
-        spdlog::get("logger")->error("Cannot open directory {}", path);
-    }
+    // if (auto dir = opendir(path.c_str()))
+    // {
+    //     while (auto f = readdir(dir))
+    //     {
+    //         if ((!f->d_name) ||
+    //             (f->d_name[0] == '.') ||
+    //             (!std::regex_search(std::string(f->d_name),match,regExCsv)))
+    //             continue;
+    //         result.push_back(path + f->d_name);
+    //     }
+    // }
+    // else
+    // {
+    //     // cannot open directory
+    //     spdlog::get("logger")->error("Cannot open directory {}", path);
+    // }
     return result;
 }
 

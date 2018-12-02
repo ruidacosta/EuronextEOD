@@ -1,3 +1,4 @@
 #!/bin/sh
 
-/usr/bin/python ./FileDownloader.py -c config.ini && ./euronextEOD config.ini
+envsubst < config_template.ini > config.ini
+/usr/bin/python ./FileDownloader -c config.ini && ./euronextEOD config.ini

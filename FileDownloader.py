@@ -10,6 +10,8 @@ import logging.handlers
 import time
 import sys
 
+from shutil import move
+
 ####################
 urls = { 
     'Equities' : "https://www.euronext.com/en/popup/data/download?ml=nyx_pd_stocks&cmd=default",
@@ -174,8 +176,11 @@ def moveFileTo(file, outputFolder):
     if not outputFolder.endswith(os.path.sep):
         outputFolder += os.path.sep
     if not os.path.isdir(outputFolder):
-        msg = "%s is not a directory" % outputFolder
-        raise OSError(msg)
+        try:
+            os.makedirs(outputFolder)
+        except OSError:
+            msg = "Can't create directory" % outputFolder
+            raise OSError(msg)
     
     filename = outputFolder + file
     counter = 2
@@ -189,8 +194,9 @@ def moveFileTo(file, outputFolder):
             filename = outputFolder + file + '_' + str(counter)
         counter += 1
     
-    logger.info('Move to %s' % filename)
-    os.rename(file,filename)
+    logger.info('Move from %s to %s' % (file, filename))
+    #os.rename(file,filename)
+    move(file,filename)
     
 def main():
     global urls, payload
