@@ -1,7 +1,7 @@
 CXX=g++
 RM=rm -f
 RM_DIR=rm -r
-CXXFLAGS=-Wall -Wshadow -Wextra -pedantic -std=c++11 -pthread -lpthread -lsqlite3
+CXXFLAGS=-Wall -Wshadow -Wextra -pedantic -std=c++17 -pthread -lpthread -lsqlite3 -lstdc++fs
 
 SRCS=$(wildcard *.cpp)
 OBJS=$(patsubst %.cpp, %.o, $(SRCS))
@@ -28,7 +28,7 @@ install: all
 	chmod a+x $(PREFIX)$(BIN)/FileDownloader
 	cp starter.sh $(PREFIX)$(BIN)/starter
 	chmod a+x $(PREFIX)$(BIN)/starter
-	cp config_example.ini $(PREFIX)$(BIN)/config.ini
+	cp config_template.ini $(PREFIX)$(BIN)/config_template.ini
 	
 clean_release: 
 	$(RM_DIR) $(BIN_FOLDER)

@@ -1,6 +1,3 @@
 Todo List:
- - configure file;
- - Install option on Makefile;
  - Zip archive per day;
- - Email error logs (create new lib);
  - Support for other database types; 
